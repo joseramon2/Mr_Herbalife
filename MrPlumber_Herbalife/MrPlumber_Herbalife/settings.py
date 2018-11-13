@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.50.180',
-    '192.168.50.56'
+    '192.168.50.56',
+    '127.0.0.1' ,
 
 ]
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'Room',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
