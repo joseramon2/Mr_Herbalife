@@ -11,3 +11,13 @@ class CuartosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuartos
         fields = ('id', 'nombre', 'descripcion', 'codigo_id', 'piso_id')
+
+class ActividadesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actividades
+        fields = ('id', 'nombre', 'descripcion')
+
+class AccesoriosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Accesorios
+        fields = ('id', 'nombre', 'descripcion','cuarto_id', 'codigo_id')

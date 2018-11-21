@@ -32,7 +32,8 @@ class Cuartos(models.Model):
     codigo = models.ForeignKey(
         Codigos,
         on_delete=models.CASCADE,
-        verbose_name="Codigo a Codigos"
+        verbose_name="Codigo a Codigos",
+        null=True
     )
 
 
@@ -51,7 +52,8 @@ class Accesorios(models.Model):
     codigo = models.ForeignKey(
         Codigos,
         on_delete=True,
-        verbose_name="Accesorios a Codigo"
+        verbose_name="Accesorios a Codigo",
+        null=True
     )
 
 
@@ -111,8 +113,28 @@ class ActividadesRealizadas(models.Model):
         verbose_name="Realizadas a Reportes"
     )
 
-'''
+# Refactor/DB
+class FocosDeActividad(models.Model):
+    id = models.AutoField(primary_key=True)
+    colores = models.CharField("colores", max_length=7)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True)
 
+
+class ActividadAlerta(models.Model):
+    id = models.AutoField(primary_key=True)
+    actividadRealizada = models.ForeignKey(
+        ActividadesRealizadas,
+        on_delete=models.CASCADE,
+        verbose_name= "Focos a Reporte"
+    )
+    foco = models.ForeignKey(
+        FocosDeActividad,
+        on_delete=models.CASCADE,
+        verbose_name="Reporte de focos a los focos"
+    )
+
+
+'''
 poll = models.ForeignKey(
     Poll,
     on_delete=models.CASCADE,
