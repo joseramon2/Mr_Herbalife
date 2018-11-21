@@ -121,6 +121,7 @@ class FocosDeActividad(models.Model):
 
 
 class ActividadAlerta(models.Model):
+    id = models.AutoField(primary_key=True)
     actividadRealizada = models.ForeignKey(
         ActividadesRealizadas,
         on_delete=models.CASCADE,

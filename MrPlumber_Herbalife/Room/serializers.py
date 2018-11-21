@@ -16,3 +16,8 @@ class ActividadesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividades
         fields = ('id', 'nombre', 'descripcion')
+
+class AccesoriosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Accesorios
+        fields = ('id', 'nombre', 'descripcion','cuarto_id', 'codigo_id')
