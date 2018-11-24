@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from Room.models import Accesorios
+from Room.models import Accesorios, Codigos
 from Room.serializers import AccesoriosSerializer
 from django.db import connection
 
@@ -17,42 +17,51 @@ def dictfetchall(cursor):
 def my_custom_sql(id=None):
     if id is None:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT Herbalife.Room_accesorios.id, Herbalife.Room_accesorios.nombre, Herbalife.Room_accesorios.descripcion, Herbalife.Room_cuartos.id as \"Cuarto_ID\", Herbalife.Room_cuartos.nombre as \"Cuarto_Nombre\", Herbalife.Room_cuartos.descripcion as \"Cuarto_Descripcion\", Herbalife.Room_pisos.id as \"Piso_ID\", Herbalife.Room_pisos.nombre as \"Piso_Nombre\", Herbalife.Room_pisos.descripcion as \"Piso_Descripcion\" From Herbalife.Room_accesorios Inner Join Herbalife.Room_cuartos on Herbalife.Room_accesorios.cuarto_id=Herbalife.Room_cuartos.id inner Join Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id;")
+            cursor.execute("SELECT Herbalife.Room_accesorios.id, Herbalife.Room_accesorios.nombre, Herbalife.Room_accesorios.descripcion, Herbalife.Room_cuartos.id as"
+                           " \"cuarto_ID\", Herbalife.Room_cuartos.nombre as \"cuarto_Nombre\", Herbalife.Room_cuartos.descripcion as \"cuarto_descripcion\", Herbalife.Room_pisos.id as "
+                           "\"piso_ID\", Herbalife.Room_pisos.nombre as \"piso_Nombre\", Herbalife.Room_pisos.descripcion as \"piso_descripcion\" ,"
+                           "Herbalife.Room_codigos.id as \"codigo\" "
+                           "From Herbalife.Room_accesorios "
+                           "Inner Join Herbalife.Room_cuartos on Herbalife.Room_accesorios.cuarto_id=Herbalife.Room_cuartos.id "
+                           "inner Join Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id "
+                           "Inner Join Herbalife.Room_codigos on Herbalife.Room_accesorios.codigo_id = Herbalife.Room_codigos.id;")
             row = dictfetchall(cursor)
         return row
     elif id >=0:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT Herbalife.Room_accesorios.id, Herbalife.Room_accesorios.nombre, Herbalife.Room_accesorios.descripcion, Herbalife.Room_cuartos.id as \"Cuarto_ID\", Herbalife.Room_cuartos.nombre as \"Cuarto_Nombre\", Herbalife.Room_cuartos.descripcion as \"Cuarto_Descripcion\", Herbalife.Room_pisos.id as \"Piso_ID\", Herbalife.Room_pisos.nombre as \"Piso_Nombre\", Herbalife.Room_pisos.descripcion as \"Piso_Descripcion\" From Herbalife.Room_accesorios Inner Join Herbalife.Room_cuartos on Herbalife.Room_accesorios.cuarto_id=Herbalife.Room_cuartos.id inner Join Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id WHERE Herbalife.Room_cuartos.id =%s;", [id])
+            cursor.execute(
+                "SELECT Herbalife.Room_accesorios.id, Herbalife.Room_accesorios.nombre, Herbalife.Room_accesorios.descripcion, Herbalife.Room_cuartos.id as"
+                " \"cuarto_ID\", Herbalife.Room_cuartos.nombre as \"cuarto_Nombre\", Herbalife.Room_cuartos.descripcion as \"cuarto_descripcion\", Herbalife.Room_pisos.id as "
+                "\"piso_ID\", Herbalife.Room_pisos.nombre as \"piso_Nombre\", Herbalife.Room_pisos.descripcion as \"piso_descripcion\" ,"
+                "Herbalife.Room_codigos.id as \"codigo\" "
+                "From Herbalife.Room_accesorios "
+                "Inner Join Herbalife.Room_cuartos on Herbalife.Room_accesorios.cuarto_id=Herbalife.Room_cuartos.id "
+                "inner Join Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id "
+                "Inner Join Herbalife.Room_codigos on Herbalife.Room_accesorios.codigo_id = Herbalife.Room_codigos.id "
+                "WHERE Herbalife.Room_cuartos.id =%s;", [id])
             row = dictfetchall(cursor)
         return row
 
 class InsertarAccesorio(APIView):
 
     def post(self, request):
-        print(request.data)
         dato = Accesorios()
+        codigo = Codigos()
+        codigo.save()
+        if "nombre" in request.data:
+            dato.nombre=request.data["nombre"]
+        if "descripcion" in request.data:
+            dato.descripcion=request.data["descripcion"]
+        if "cuarto_id" in request.data:
+            dato.cuarto_id=request.data["cuarto_id" ]
+        dato.codigo_id=codigo.id
         try:
-            for value in request.data:
-                print(value, ":", request.data[value])
-                if value =="nombre":
-                    dato.nombre=request.data[value]
-                elif value =="descripcion":
-                    dato.descripcion=request.data[value]
-                elif value =="cuarto_id":
-                    dato.cuarto_id=request.data[value]
-                elif value == "id":
-                    try:
-                        #"{\"response\":\"id diplucado\"}",
-                        aux = Accesorios.objects.get(id=request.data[value])
-                        return Response("{\"response\":\"id diplucado\"}",status=status.HTTP_400_BAD_REQUEST)
-                    except Accesorios.DoesNotExist:
-                        dato.id = request.data[value]
-                elif value =="codigo_id":
-                    dato.codigo_id=request.data[value]
             dato.save()
-            return Response(status=status.HTTP_201_CREATED)
-        except TypeError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response(("{confirmar:"+str([e])+"}"), status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_201_CREATED)
+
 
 
     def get(self, request):
@@ -94,34 +103,8 @@ class listAccesorios(APIView):
             return Response(valorAGuardar.data, status=status.HTTP_200_OK)
         return Response(valorAGuardar.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        '''
-        SELECT
-        Herbalife.Room_accesorios.id, Herbalife.Room_accesorios.nombre, Herbalife.Room_accesorios.descripcion,
-        Herbalife.Room_cuartos.id as "Cuarto_ID", Herbalife.Room_cuartos.nombre as "Cuarto_Nombre", Herbalife.Room_cuartos.descripcion as "Cuarto_Descripcion",
-        Herbalife.Room_pisos.id as "Piso_ID", Herbalife.Room_pisos.nombre as "Piso_Nombre", Herbalife.Room_pisos.descripcion as "Piso_Descripcion"
-        From Herbalife.Room_accesorios
-        Inner Join Herbalife.Room_cuartos on Herbalife.Room_accesorios.cuarto_id=Herbalife.Room_cuartos.id
-        inner Join Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id;
-        :param request:
-        :return:
-        '''
+    def delete(self, request, pk, format=None):
+        dato = self.get_object(pk)
+        mostrar = AccesoriosSerializer(dato)
+        dato.delete()
+        return Response(mostrar.data, status=status.HTTP_204_NO_CONTENT)
