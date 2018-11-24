@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from Room.models import Actividades
 from Room.serializers import ActividadesSerializer
-from django.db import connection
 
 class InsertarActividad(APIView):
 

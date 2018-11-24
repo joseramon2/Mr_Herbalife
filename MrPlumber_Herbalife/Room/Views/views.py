@@ -18,9 +18,11 @@ class PisosList(APIView):
     def post(self, request, format=None):
         valorAGuardar = PisosSerializer(data=request.data)
         if valorAGuardar.is_valid():
-            valorAGuardar.save()
-            return Response(valorAGuardar.data, status=status.HTTP_201_CREATED)
-        return Response(valorAGuardar.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                valorAGuardar.save()
+                return Response(valorAGuardar.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response(("{confirmar:"+str([e])+"}"), status=status.HTTP_400_BAD_REQUEST)
 
 
 class PisoNumero(APIView):

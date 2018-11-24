@@ -5,21 +5,20 @@ from django.db import models
 
 class Pisos(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField("nombre", max_length=50)
-    descripcion = models.CharField("descripcion", max_length=50, blank=True)
+    nombre = models.CharField("nombre", max_length=50, default=None)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True, null=True)
     class Meta:
         ordering = ('id',)
 
 class Codigos(models.Model):
     id = models.AutoField(primary_key=True)
-    codigo = models.IntegerField()
     creado = models.DateTimeField(auto_now=True)
 
 
 class Cuartos(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField("nombre", max_length=50)
-    descripcion = models.CharField("descripcion", max_length=50, blank=True)
+    nombre = models.CharField("nombre", max_length=50, default=None)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True, null=True)
 
     # FK Cuarto a Piso
     piso = models.ForeignKey(
@@ -39,8 +38,8 @@ class Cuartos(models.Model):
 
 class Accesorios(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField("nombre", max_length=50)
-    descripcion = models.CharField("descripcion", max_length=50, blank=True)
+    nombre = models.CharField("nombre", max_length=50, default=None)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True ,null=True)
 
     # FK
     cuarto = models.ForeignKey(
@@ -59,8 +58,8 @@ class Accesorios(models.Model):
 
 class Actividades(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField("nombre", max_length=50)
-    descripcion = models.CharField("descripcion", max_length=50, blank=True)
+    nombre = models.CharField("nombre", max_length=50, default=None)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True, null=True)
 
 
 class AccesoriosActividades(models.Model):
@@ -83,7 +82,7 @@ class AccesoriosActividades(models.Model):
 class Reportes(models.Model):
     id = models.AutoField(primary_key=True)
     creado = models.DateTimeField("creado", auto_now=True)
-    observaciones = models.TextField("observaciones", blank=True)
+    observaciones = models.TextField("observaciones", blank=True,null=True)
     inicio = models.DateTimeField("inicio")
     fin = models.DateTimeField()
 
@@ -97,7 +96,7 @@ class Reportes(models.Model):
 
 class ActividadesRealizadas(models.Model):
     id = models.AutoField(primary_key=True)
-    observaciones = models.TextField("observaciones", blank=True)
+    observaciones = models.TextField("observaciones", blank=True,null=True )
     realizado = models.DateTimeField("realizado", auto_now=True)
 
     # FK
@@ -117,7 +116,7 @@ class ActividadesRealizadas(models.Model):
 class FocosDeActividad(models.Model):
     id = models.AutoField(primary_key=True)
     colores = models.CharField("colores", max_length=7)
-    descripcion = models.CharField("descripcion", max_length=50, blank=True)
+    descripcion = models.CharField("descripcion", max_length=50, blank=True, null=True)
 
 
 class ActividadAlerta(models.Model):
