@@ -24,4 +24,10 @@ class AccesoriosSerializer(serializers.ModelSerializer):
 
 class CodigosSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Codigos
         fields = ('id', 'creado')
+
+class AccesoriosActividadesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccesoriosActividades
+        fields = ('id', 'accesorio_id', 'actividades_id')
