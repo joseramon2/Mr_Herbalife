@@ -1,5 +1,5 @@
 from django.urls import path
-from Room.Views import views, viewCuartos, viewActividades, viewAccesoriosDeBanos, viewAltaActividad
+from Room.Views import views, viewCuartos, viewActividades, viewAccesoriosDeBanos, viewAltaActividad, viewFocosDeActividad, viewReportes
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
@@ -12,7 +12,11 @@ urlpatterns = [
     path('accesoriosDeBanos/', viewAccesoriosDeBanos.InsertarAccesorio.as_view()),
     path('accesoriosDeBanos/<int:pk>', viewAccesoriosDeBanos.listAccesorios.as_view()),
     path('accesorioActividad/', viewAltaActividad.AltaActividad.as_view()),
-    path('accesorioActividad/<int:pk>', viewAltaActividad.Actividad.as_view())
+    path('accesorioActividad/<int:pk>', viewAltaActividad.Actividad.as_view()),
+    path('alertas/', viewFocosDeActividad.focoActividad.as_view()),
+    path('alertas/<int:pk>', viewFocosDeActividad.focoActividadInfo.as_view()),
+    path('reportes/', viewReportes.ReportesData.as_view()),
+    path('reportes/<int:pk>', viewReportes.ReportesInfo.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

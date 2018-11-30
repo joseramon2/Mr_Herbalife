@@ -31,3 +31,23 @@ class AccesoriosActividadesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccesoriosActividades
         fields = ('id', 'accesorio_id', 'actividades_id')
+
+class FocosDeActividadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FocosDeActividad
+        fields = ('id', 'colores', 'descripcion')
+
+class ReportesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Reportes
+        fields=('id', 'creado', 'observaciones', 'inicio', 'fin', 'cuarto_id')
+
+class ActividadesRealizadasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ActividadesRealizadas
+        fields=('id', 'observaciones', 'realizado','accesorio_id', 'actividades_id', 'reporte_id')
+
+class ActividadAlertaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ActividadAlerta
+        fields=('id','actividadRealizada_id','foco_id','observaciones')

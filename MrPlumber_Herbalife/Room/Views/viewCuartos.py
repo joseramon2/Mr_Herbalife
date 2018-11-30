@@ -7,10 +7,21 @@ from Room.serializers import CuartosSerializer
 
 
 class CuartosGuardar(APIView):
+
     def get(self, request):
-        dato = Cuartos.objects.all()
-        serializer = CuartosSerializer(dato, many=True)
-        return Response(serializer.data)
+        query = request.GET.get("codigo")
+        if query is None:
+            dato = Cuartos.objects.all()
+            serializer = CuartosSerializer(dato, many=True)
+            return Response(serializer.data)
+        else:
+            try:
+                dato=Cuartos.objects.get(codigo_id=int(query))
+                print(dato.nombre)
+                serializer=CuartosSerializer(dato)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Cuartos.DoesNotExist as e:
+                return Response("{\"error\":\""+str(e)+"\"}", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         print(request.data)
@@ -44,7 +55,6 @@ class CuartoList(APIView):
     def get(self, request, pk2):
         lista = self.get_object(pk2)
         serializer = CuartosSerializer(lista)
-
         return Response(serializer.data)
 
     def put(self, request, pk2):

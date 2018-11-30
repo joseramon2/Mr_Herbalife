@@ -67,13 +67,19 @@ class InsertarAccesorio(APIView):
     def get(self, request):
 
         query = request.GET.get('cuarto')
-        if query is None:
-            dato = my_custom_sql()
+        query2= request.GET.get("codigp")
+        if query is not None:
+            dato = my_custom_sql(int(query))
             print("############")
             print(query)
             return Response(dato, status=status.HTTP_200_OK)
+        elif query2 is not None:
+            dato=Accesorios.objects.get(codigo_id=int(query2))
+            serializer=AccesoriosSerializer(dato)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            dato = my_custom_sql(int(query))
+
+            dato = my_custom_sql()
             print("############")
             print(query)
             return Response(dato, status=status.HTTP_200_OK)
