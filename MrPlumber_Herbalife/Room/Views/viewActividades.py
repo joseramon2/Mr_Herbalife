@@ -39,3 +39,9 @@ class EditarActividad(APIView):
             valorAGuardar.save()
             return Response(valorAGuardar.data, status=status.HTTP_200_OK)
         return Response(valorAGuardar.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        dato = self.get_object(pk)
+        mostrar = ActividadesSerializer(dato)
+        dato.delete()
+        return Response(mostrar.data, status=status.HTTP_202_ACCEPTED)

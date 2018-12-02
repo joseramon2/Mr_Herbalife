@@ -111,6 +111,11 @@ class ActividadesRealizadas(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Realizadas a Reportes"
     )
+    accesorio=models.ForeignKey(
+        Accesorios,
+        on_delete=models.CASCADE,
+        verbose_name="Accesorios a Realizadas"
+    )
 
 # Refactor/DB
 class FocosDeActividad(models.Model):
@@ -121,6 +126,7 @@ class FocosDeActividad(models.Model):
 
 class ActividadAlerta(models.Model):
     id = models.AutoField(primary_key=True)
+    observaciones=models.TextField("observaciones", blank=True, null=True )
     actividadRealizada = models.ForeignKey(
         ActividadesRealizadas,
         on_delete=models.CASCADE,
