@@ -135,3 +135,8 @@ class listAccesorios(APIView):
         mostrar = AccesoriosSerializer(dato)
         dato.delete()
         return Response(mostrar.data, status=status.HTTP_204_NO_CONTENT)
+
+#######################################################################
+class listaActividades(APIView):
+    def get(self, request, pk):
+        return Response(status=status.HTTP_200_OK)

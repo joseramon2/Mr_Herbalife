@@ -8,39 +8,48 @@ from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer
 class ReportesData(APIView):
     def post(self, request):
         reporte=Reportes()
-        actR = ActividadesRealizadas()
-        actAlrt = ActividadAlerta()
+        print(request.data)
+
         try:
-            reporte.creado= request.data["creado"]
+            reporte.creado_por= request.data["creado_por"]
             reporte.observaciones=request.data["observaciones"]
             reporte.inicio=request.data["inicio"]
             reporte.fin=request.data["fin"]
             reporte.cuarto_id=request.data["cuarto_id"]
             reporte.save()
             ##################
-            actR.reporte_id=reporte.id
-            for r in request.actividadesRealizadas:
-                actR.observaciones=r.observaciones
-                actR.realizado=r.realizado
-                actR.accesorio_id=r.accerosio_id
-                actR.actividades_id=r.actividades_id
-            actR.save()
+
+            for r in request.data["actividadesRealizadas"]:
+                print("\n")
+                print(r)
+                actR = ActividadesRealizadas()
+                actR.reporte_id = reporte.id
+                actR.observaciones=r["observaciones"]
+                actR.realizado=r["realizado"]
+                actR.accesorio_id=r["accesorio_id"]
+                actR.actividades_id=r["actividades_id"]
+                print("\n")
+                actR.save()
             ###################
-            actAlrt.actividadRealizada_id=actR.id
-            actAlrt.foco_id=request.data["foco_id"]
+                actAlrt = ActividadAlerta()
+                actAlrt.actividadRealizada_id=actR.id
+                actAlrt.foco_id=request.data["foco_id"]
             ## Checar como lo manda Mario
-            actAlrt.observaciones=request.data["ActAlert_observaciones"]##
+                actAlrt.observaciones=request.data["ActAlerta_observaciones"]##
             ##
-            actAlrt.save()
+                actAlrt.save()
+            return Response({"ok":"Reporte creado"}, status=status.HTTP_201_CREATED)
         except Exception as e:
+            print("############################")
             print(e)
-            raise Http404
+            #reporte.delete()
+            return Response({"error":str(e)})
 
 
 
     def get(self, request):
 
-        return Response("{hola}", status=status.HTTP_200_OK)
+        return Response("{\"hola\":\"adios\"}", status=status.HTTP_200_OK)
 
 
 class ReportesInfo(APIView):

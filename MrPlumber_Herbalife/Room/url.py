@@ -11,6 +11,7 @@ urlpatterns = [
     path('actividades/<int:pk>', viewActividades.EditarActividad.as_view()),
     path('accesorios/', viewAccesoriosDeBanos.InsertarAccesorio.as_view()),
     path('accesorios/<int:pk>', viewAccesoriosDeBanos.listAccesorios.as_view()),
+    path('accesorios/listaActividades/<int:pk>', viewAccesoriosDeBanos.listaActividades.as_view()),
     path('accesorioActividad/', viewAltaActividad.AltaActividad.as_view()),
     path('accesorioActividad/<int:pk>', viewAltaActividad.Actividad.as_view()),
     path('alertas/', viewFocosDeActividad.focoActividad.as_view()),

@@ -81,7 +81,7 @@ class AccesoriosActividades(models.Model):
 
 class Reportes(models.Model):
     id = models.AutoField(primary_key=True)
-    creado = models.DateTimeField("creado", auto_now=True)
+    creado_por = models.TextField("creado_por", blank=True,null=True)
     observaciones = models.TextField("observaciones", blank=True,null=True)
     inicio = models.DateTimeField("inicio")
     fin = models.DateTimeField()
