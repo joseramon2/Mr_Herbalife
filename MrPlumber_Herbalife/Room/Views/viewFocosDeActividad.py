@@ -12,7 +12,7 @@ class focoActividad(APIView):
         if dato.is_valid():
             dato.save()
             return Response(dato.data, status=status.HTTP_201_CREATED)
-        return Response(dato.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(dato.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def get(self, request):

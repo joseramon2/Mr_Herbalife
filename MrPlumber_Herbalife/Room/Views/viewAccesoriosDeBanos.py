@@ -13,7 +13,23 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
-
+def query_actividades(id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT "
+                        "Herbalife.Room_accesoriosactividades.id, "
+                        "Herbalife.Room_accesoriosactividades.accesorio_id, "
+                        "Herbalife.Room_accesorios.nombre as \'accesorio_nombre\', "
+                        "Herbalife.Room_accesoriosactividades.actividades_id, "
+                        "Herbalife.Room_actividades.nombre as \'actividades_nombre\' "
+                        "FROM "
+                        "Herbalife.Room_accesoriosactividades "
+                        "Inner join "
+                        "Herbalife.Room_accesorios on Herbalife.Room_accesoriosactividades.accesorio_id = Herbalife.Room_accesorios.id "
+                        "Inner join "
+                        "Herbalife.Room_actividades on Herbalife.Room_accesoriosactividades.actividades_id = Herbalife.Room_actividades.id "
+                        "where Herbalife.Room_accesoriosactividades.accesorio_id=%s; ", [id])
+        row = dictfetchall(cursor)
+    return row
 def codigo_query(codigo):
     with connection.cursor() as cursor:
         cursor.execute(
@@ -75,7 +91,6 @@ class InsertarAccesorio(APIView):
             return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             codigo.delete()
-
             data={'error':str(e)}
             return Response(data, status=status.HTTP_404_NOT_FOUND)
 
@@ -135,3 +150,9 @@ class listAccesorios(APIView):
         mostrar = AccesoriosSerializer(dato)
         dato.delete()
         return Response(mostrar.data, status=status.HTTP_204_NO_CONTENT)
+
+#######################################################################
+class listaActividades(APIView):
+    def get(self, request, pk):
+        print(query_actividades(pk))
+        return Response(query_actividades(pk), status=status.HTTP_200_OK)

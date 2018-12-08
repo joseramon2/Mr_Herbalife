@@ -40,7 +40,7 @@ class FocosDeActividadSerializer(serializers.ModelSerializer):
 class ReportesSerializer(serializers.ModelSerializer):
     class Meta:
         model=Reportes
-        fields=('id', 'creado', 'observaciones', 'inicio', 'fin', 'cuarto_id')
+        fields=('id', 'creado_por', 'observaciones', 'inicio', 'fin', 'cuarto_id')
 
 class ActividadesRealizadasSerializer(serializers.ModelSerializer):
     class Meta:
