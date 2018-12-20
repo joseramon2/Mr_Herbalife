@@ -154,5 +154,5 @@ class listAccesorios(APIView):
 #######################################################################
 class listaActividades(APIView):
     def get(self, request, pk):
-        print(query_actividades(pk))
+        #print(query_actividades(pk))
         return Response(query_actividades(pk), status=status.HTTP_200_OK)

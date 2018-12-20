@@ -2,6 +2,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import connection
 from Room.models import Reportes, ActividadesRealizadas, ActividadAlerta
 from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer,ActividadAlertaSerializer
 
@@ -17,12 +18,91 @@ def dictfetchall(cursor):
 def my_custom_sql(id=None):
     if id is None:
         with connection.cursor() as cursor:
-            cursor.execute(";")
+            cursor.execute("SELECT "
+                            "Herbalife.Room_reportes.id as \'reporte_id\', "
+                            "Herbalife.Room_reportes.creado_por, "
+                            "Herbalife.Room_reportes.observaciones as \'reporte_observaciones\', "
+                            "Herbalife.Room_reportes.inicio, "
+                            "Herbalife.Room_reportes.fin, "
+                            "Herbalife.Room_reportes.cuarto_id, "
+                            "Herbalife.Room_cuartos.nombre as 'cuarto_nombre', "
+                            "Herbalife.Room_cuartos.codigo_id as 'cuarto_codigo', "
+                            "Herbalife.Room_pisos.nombre as \'piso_nombre\', "
+                            "Herbalife.Room_actividadesrealizadas.id as \'ActRealizada_id\', "
+                            "Herbalife.Room_actividadesrealizadas.observaciones as 'ActRealizada_observaciones', "
+                            "Herbalife.Room_actividadesrealizadas.realizado, "
+                            "Herbalife.Room_actividadesrealizadas.accesorio_id, "
+                            "Herbalife.Room_actividadesrealizadas.actividades_id, "
+                            "Herbalife.Room_actividades.id as \'actividad_id\', "
+                            "Herbalife.Room_actividades.nombre as \'actividad_nombre\', "
+                            "Herbalife.Room_accesorios.nombre as \'accesorio_nombre\', "
+                            "Herbalife.Room_actividadalerta.id \'ActAlert_id\', "
+                            "Herbalife.Room_actividadalerta.observaciones as \'ActAlerta_observaciones\', "
+                            "Herbalife.Room_actividadalerta.foco_id, "
+                            "Herbalife.Room_focosdeactividad.colores, "
+                            "Herbalife.Room_focosdeactividad.descripcion "
+                        "FROM "
+                            "Herbalife.Room_reportes "
+                                "inner join "
+                                    "Herbalife.Room_cuartos on Herbalife.Room_reportes.cuarto_id = Herbalife.Room_cuartos.id "
+                                "inner join "
+                                    "Herbalife.Room_actividadesrealizadas on Herbalife.Room_actividadesrealizadas.reporte_id = Herbalife.Room_reportes.id "
+                                "inner join "
+                                    "Herbalife.Room_actividades on Herbalife.Room_actividades.id = Herbalife.Room_actividadesrealizadas.actividades_id "
+                                "inner join "
+                                    "Herbalife.Room_actividadalerta on Herbalife.Room_actividadalerta.actividadRealizada_id = Herbalife.Room_actividadesrealizadas.id "
+                                "inner join "
+                                    "Herbalife.Room_accesorios on Herbalife.Room_actividadesrealizadas.accesorio_id = Herbalife.Room_accesorios.id "
+                                "inner join "
+                                    "Herbalife.Room_focosdeactividad on Herbalife.Room_focosdeactividad.id = Herbalife.Room_actividadalerta.foco_id "
+                                "inner join "
+                                    "Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id "
+                           "order by Herbalife.Room_reportes.id;")
             row = dictfetchall(cursor)
         return row
     elif id > 0:
         with connection.cursor() as cursor:
-            cursor.execute(";", [id])
+            cursor.execute("SELECT "
+                            "Herbalife.Room_reportes.id as \'reporte_id\', "
+                            "Herbalife.Room_reportes.creado_por, "
+                            "Herbalife.Room_reportes.observaciones as \'reporte_observaciones\', "
+                            "Herbalife.Room_reportes.inicio, "
+                            "Herbalife.Room_reportes.fin, "
+                            "Herbalife.Room_reportes.cuarto_id, "
+                            "Herbalife.Room_cuartos.nombre as 'cuarto_nombre', "
+                            "Herbalife.Room_cuartos.codigo_id as 'cuarto_codigo', "
+                            "Herbalife.Room_pisos.nombre as \'piso_nombre\', "
+                            "Herbalife.Room_actividadesrealizadas.id as \'ActRealizada_id\', "
+                            "Herbalife.Room_actividadesrealizadas.observaciones as 'ActRealizada_observaciones', "
+                            "Herbalife.Room_actividadesrealizadas.realizado, "
+                            "Herbalife.Room_actividadesrealizadas.accesorio_id, "
+                            "Herbalife.Room_actividadesrealizadas.actividades_id, "
+                            "Herbalife.Room_actividades.id as \'actividad_id\', "
+                            "Herbalife.Room_actividades.nombre as \'actividad_nombre\', "
+                            "Herbalife.Room_accesorios.nombre as \'accesorio_nombre\', "
+                            "Herbalife.Room_actividadalerta.id \'ActAlert_id\', "
+                            "Herbalife.Room_actividadalerta.observaciones as \'ActAlerta_observaciones\', "
+                            "Herbalife.Room_actividadalerta.foco_id, "
+                            "Herbalife.Room_focosdeactividad.colores, "
+                            "Herbalife.Room_focosdeactividad.descripcion "
+                        "FROM "
+                            "Herbalife.Room_reportes "
+                                "inner join "
+                                    "Herbalife.Room_cuartos on Herbalife.Room_reportes.cuarto_id = Herbalife.Room_cuartos.id "
+                                "inner join "
+                                    "Herbalife.Room_actividadesrealizadas on Herbalife.Room_actividadesrealizadas.reporte_id = Herbalife.Room_reportes.id "
+                                "inner join "
+                                    "Herbalife.Room_actividades on Herbalife.Room_actividades.id = Herbalife.Room_actividadesrealizadas.actividades_id "
+                                "inner join "
+                                    "Herbalife.Room_actividadalerta on Herbalife.Room_actividadalerta.actividadRealizada_id = Herbalife.Room_actividadesrealizadas.id "
+                                "inner join "
+                                    "Herbalife.Room_accesorios on Herbalife.Room_actividadesrealizadas.accesorio_id = Herbalife.Room_accesorios.id "
+                                "inner join "
+                                    "Herbalife.Room_focosdeactividad on Herbalife.Room_focosdeactividad.id = Herbalife.Room_actividadalerta.foco_id "
+                                "inner join "
+                                    "Herbalife.Room_pisos on Herbalife.Room_cuartos.piso_id = Herbalife.Room_pisos.id "
+                        "where Herbalife.Room_reportes.id=%s "
+                           "order by Herbalife.Room_reportes.id;", [id])
             row = dictfetchall(cursor)
         return row
 
@@ -32,7 +112,9 @@ class ReportesData(APIView):
 
     def post(self, request):
         reporte=Reportes()
-        print(request.data)
+        print("request")
+        print(request)
+        print("end request")
 
         try:
             reporte.creado_por= request.data["creado_por"]
@@ -45,7 +127,7 @@ class ReportesData(APIView):
 
             for r in request.data["actividadesRealizadas"]:
                 print("\n")
-                print(r)
+                #print(r)
                 actR = ActividadesRealizadas()
                 actR.reporte_id = reporte.id
                 actR.observaciones=r["observaciones"]
@@ -67,13 +149,13 @@ class ReportesData(APIView):
             print("############################")
             print(e)
             #reporte.delete()
-            return Response({"error":str(e)})
+            return Response({"error":str(e)}, status=status.HTTP_204_NO_CONTENT)
 
 
 
     def get(self, request):
-
-        return Response("{\"hola\":\"adios\"}", status=status.HTTP_200_OK)
+        dato = my_custom_sql()
+        return Response(dato, status=status.HTTP_200_OK)
 
 
 class ReportesInfo(APIView):
@@ -85,9 +167,13 @@ class ReportesInfo(APIView):
             raise Http404
 
     def get(self, request, pk):
-        dato=self.get_object(pk)
-        serializer = ReportesSerializer(dato)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        #dato=self.get_object(pk)
+        #serializer = ReportesSerializer(dato)
+        dato=my_custom_sql(pk)
+        print("\n")
+        print(dato[0],"\n",dato[1],"\n",dato[2])
+        print("\n")
+        return Response(dato, status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
         dato=self.get_object(pk)
