@@ -5,6 +5,7 @@ from rest_framework import status
 from django.db import connection
 from Room.models import Reportes, ActividadesRealizadas, ActividadAlerta
 from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer,ActividadAlertaSerializer
+from Room.Functions.fixDict import Fix
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -155,7 +156,8 @@ class ReportesData(APIView):
 
     def get(self, request):
         dato = my_custom_sql()
-        return Response(dato, status=status.HTTP_200_OK)
+        FixObjt= Fix()
+        return Response(FixObjt.fixDict_(dato), status=status.HTTP_200_OK)
 
 
 class ReportesInfo(APIView):
@@ -169,11 +171,9 @@ class ReportesInfo(APIView):
     def get(self, request, pk):
         #dato=self.get_object(pk)
         #serializer = ReportesSerializer(dato)
+        FixObjt = Fix()
         dato=my_custom_sql(pk)
-        print("\n")
-        print(dato[0],"\n",dato[1],"\n",dato[2])
-        print("\n")
-        return Response(dato, status=status.HTTP_200_OK)
+        return Response(FixObjt.fixDict_(dato), status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
         dato=self.get_object(pk)
