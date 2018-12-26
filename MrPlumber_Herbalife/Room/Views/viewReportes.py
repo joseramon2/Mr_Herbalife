@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import connection
 from Room.models import Reportes, ActividadesRealizadas, ActividadAlerta
-from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer,ActividadAlertaSerializer
+#from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer,ActividadAlertaSerializer
 from Room.Functions.fixDict import Fix
 
 def dictfetchall(cursor):

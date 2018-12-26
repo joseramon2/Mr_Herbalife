@@ -151,6 +151,7 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.50.56',
     '192.168.50.56:3000',
     '35.243.204.9',
+    'www.mrplumber.com.mx',
 )
 
 CORS_ALLOW_CREDENTIALS = True
