@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from Room.models import *
+from django.contrib.auth.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'id')
 
 class PisosSerializer(serializers.ModelSerializer):
     class Meta:
