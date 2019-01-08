@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     '192.168.50.56',
     '192.168.50.56:3000',
     '35.243.204.9',
+    'neo-byte.com',
 ]
 
 
@@ -151,7 +152,8 @@ CORS_ORIGIN_WHITELIST = (
     '192.168.50.56',
     '192.168.50.56:3000',
     '35.243.204.9',
-    'www.mrplumber.com.mx',
+    'www.mrplumber.com.mx:81',
+    'localhost',
 )
 
 CORS_ALLOW_CREDENTIALS = True
@@ -182,6 +184,7 @@ CORS_ALLOW_HEADERS = (
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',

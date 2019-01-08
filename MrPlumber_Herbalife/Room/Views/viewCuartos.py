@@ -2,8 +2,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from Room.models import Cuartos, Codigos
-from Room.serializers import CuartosSerializer
+from Room.models import Cuartos, Codigos, Accesorios
+from Room.serializers import CuartosSerializer, AccesoriosSerializer
 from django.db import connection
 import json
 from django.http import HttpResponse
@@ -103,3 +103,13 @@ class CuartoList(APIView):
         serializer = CuartosSerializer(dato)
         dato.delete()
         return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+class CuartoAccesorios(APIView):
+
+    def get(self, request, pk2):
+        cuartoCodigo = Cuartos.objects.get(codigo_id=pk2)
+        dato = Accesorios.objects.all()
+        dato = dato.filter(cuarto_id=cuartoCodigo.id)
+        serializer = AccesoriosSerializer(dato, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

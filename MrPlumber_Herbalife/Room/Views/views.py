@@ -1,7 +1,7 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from Room.models import Pisos
 from Room.serializers import PisosSerializer
 
@@ -9,9 +9,11 @@ class PisosList(APIView):
     """
     List all code snippets, or create a new snippet.
     """
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request, format=None):
+
         lista_pisos = Pisos.objects.all()
-        print(lista_pisos)
+        #print(lista_pisos)
         serializer = PisosSerializer(lista_pisos, many=True)
         return Response(serializer.data)
 
@@ -27,6 +29,7 @@ class PisosList(APIView):
 
 class PisoNumero(APIView):
 
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, pk):
         try:
             return Pisos.objects.get(pk=pk)
