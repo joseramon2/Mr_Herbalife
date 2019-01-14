@@ -37,6 +37,8 @@ ALLOWED_HOSTS = [
     'neo-byte.com',
 ]
 
+USE_TZ = False
+TIME_ZONE = 'UTC'
 
 # Application definition
 

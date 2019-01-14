@@ -18,7 +18,8 @@ urlpatterns = [
     path('alertas/<int:pk>', viewFocosDeActividad.focoActividadInfo.as_view()),
     path('reportes/', viewReportes.ReportesData.as_view()),
     path('reportes/<int:pk>', viewReportes.ReportesInfo.as_view()),
-    path('cuartos/accesorios/<int:pk2>', viewCuartos.CuartoAccesorios.as_view())
+    path('cuartos/accesorios/<int:pk2>', viewCuartos.CuartoAccesorios.as_view()),
+    path('actividad/reporte/', viewReportes.ReporteEditDesc.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -6,6 +6,8 @@ from django.db import connection
 from Room.models import Reportes, ActividadesRealizadas, ActividadAlerta
 #from Room.serializers import ReportesSerializer, ActividadesRealizadasSerializer,ActividadAlertaSerializer
 from Room.Functions.fixDict import Fix
+from django.utils import timezone
+import pytz
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -132,7 +134,7 @@ class ReportesData(APIView):
                 actR = ActividadesRealizadas()
                 actR.reporte_id = reporte.id
                 actR.observaciones=r["observaciones"]
-                actR.realizado=r["realizado"]
+                actR.realizado= r["realizado"]
                 actR.accesorio_id=r["accesorio_id"]
                 actR.actividades_id=r["actividades_id"]
                 print("\n")
@@ -145,6 +147,8 @@ class ReportesData(APIView):
                 actAlrt.observaciones=request.data["ActAlerta_observaciones"]##
             ##
                 actAlrt.save()
+
+            print(request.data)
             return Response({"ok":"Reporte creado"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print("############################")
@@ -179,20 +183,34 @@ class ReportesInfo(APIView):
         dato=self.get_object(pk)
         dato.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ReporteEditDesc(APIView):
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
+
+    def put(self, request):
+        try:
+            reporte = ActividadesRealizadas.objects.get(pk=request.data["ActRealizada_id"])
+            reporte.observaciones=request.data["ActRealizada_observaciones"]
+            reporte.save()
+
+            actAlert = ActividadAlerta.objects.get(pk=request.data["ActAlert_id"])
+            actAlert.foco_id=request.data["foco_id"]
+            actAlert.save()
+
+            return Response({"Mensaje": "Ok"}, status=status.HTTP_202_ACCEPTED)
+        except Exception as e:
+            print(e)
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 '''
 {
-  "codigoRoom": 2,
-  "inicio": "",
-  "fin": "",
-  "observaciones": "",
-  "actividadesRealizadas": [
-    {
-      "codigoAccesorio": 2,
-      "idActividad": 1,
-      "observacion": "",
-      "idFoco": 1,
-      "hora": ""
-    }
-  ]
+"ActRealizada_id": 11,
+"ActRealizada_observaciones": "jojojojojojo",
+"ActAlert_id": 11
+"foco_id": 82585858
 }
 '''
