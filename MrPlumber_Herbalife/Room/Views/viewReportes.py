@@ -134,6 +134,7 @@ class ReportesData(APIView):
                 actR = ActividadesRealizadas()
                 actR.reporte_id = reporte.id
                 actR.observaciones=r["observaciones"]
+                print("\actREa\n")
                 actR.realizado= r["realizado"]
                 actR.accesorio_id=r["accesorio_id"]
                 actR.actividades_id=r["actividades_id"]
@@ -191,13 +192,23 @@ class ReporteEditDesc(APIView):
 
     def put(self, request):
         try:
+            '''ActRea = ActividadesRealizadas.objects.get(id=1)
+            print("\n\n")
+            print(ActRea.realizado)
             reporte = ActividadesRealizadas.objects.get(pk=request.data["ActRealizada_id"])
             reporte.observaciones=request.data["ActRealizada_observaciones"]
             reporte.save()
 
             actAlert = ActividadAlerta.objects.get(pk=request.data["ActAlert_id"])
             actAlert.foco_id=request.data["foco_id"]
+            print("\n\n")
+            #print(actAlert.realizado)
             actAlert.save()
+            #print(actAlert.realizado)
+            print("\n\n")
+            print("\n\n")
+            print(ActRea.realizado)'''
+            print(update(request.data["ActRealizada_id"], request.data["ActRealizada_observaciones"], request.data["ActAlert_id"], request.data["foco_id"]))
 
             return Response({"Mensaje": "Ok"}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
@@ -205,7 +216,13 @@ class ReporteEditDesc(APIView):
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
-
+def update(ActRealizada_id, ActRealizada_observaciones, ActAlert_id, foco_id):
+    with connection.cursor() as cursor:
+        cursor.execute("Update Herbalife.Room_actividadesrealizadas set observaciones=%s where id=%s;", [ActRealizada_observaciones, ActRealizada_id])
+        cursor.execute("Update Herbalife.Room_actividadalerta set foco_id=%s where id=%s;", [foco_id, ActAlert_id])
+        print("update")
+        row = cursor.fetchone()
+    return row
 '''
 {
 "ActRealizada_id": 11,
