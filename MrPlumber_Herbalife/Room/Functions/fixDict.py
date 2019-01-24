@@ -45,6 +45,7 @@ class Fix():
 				report['cuarto_id'] = obj["cuarto_id"]
 				report['cuarto_nombre'] = obj["cuarto_nombre"]
 				report['piso_nombre'] = obj["piso_nombre"]
+				report['isReport'] = obj['isReport']
 				
 				activity = {}
 				activitiesList = []

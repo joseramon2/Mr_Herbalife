@@ -28,8 +28,9 @@ def my_custom_sql(id=None):
                             "Herbalife.Room_reportes.inicio, "
                             "Herbalife.Room_reportes.fin, "
                             "Herbalife.Room_reportes.cuarto_id, "
-                            "Herbalife.Room_cuartos.nombre as 'cuarto_nombre', "
-                            "Herbalife.Room_cuartos.codigo_id as 'cuarto_codigo', "
+                            "Herbalife.Room_reportes.isReport, "
+                            "Herbalife.Room_cuartos.nombre as \'cuarto_nombre\', "
+                            "Herbalife.Room_cuartos.codigo_id as \'cuarto_codigo\', "
                             "Herbalife.Room_pisos.nombre as \'piso_nombre\', "
                             "Herbalife.Room_actividadesrealizadas.id as \'ActRealizada_id\', "
                             "Herbalife.Room_actividadesrealizadas.observaciones as 'ActRealizada_observaciones', "
@@ -72,11 +73,12 @@ def my_custom_sql(id=None):
                             "Herbalife.Room_reportes.inicio, "
                             "Herbalife.Room_reportes.fin, "
                             "Herbalife.Room_reportes.cuarto_id, "
-                            "Herbalife.Room_cuartos.nombre as 'cuarto_nombre', "
-                            "Herbalife.Room_cuartos.codigo_id as 'cuarto_codigo', "
+                            "Herbalife.Room_reportes.isReport, "
+                            "Herbalife.Room_cuartos.nombre as \'cuarto_nombre\', "
+                            "Herbalife.Room_cuartos.codigo_id as \'cuarto_codigo\', "
                             "Herbalife.Room_pisos.nombre as \'piso_nombre\', "
                             "Herbalife.Room_actividadesrealizadas.id as \'ActRealizada_id\', "
-                            "Herbalife.Room_actividadesrealizadas.observaciones as 'ActRealizada_observaciones', "
+                            "Herbalife.Room_actividadesrealizadas.observaciones as \'ActRealizada_observaciones\', "
                             "Herbalife.Room_actividadesrealizadas.realizado, "
                             "Herbalife.Room_actividadesrealizadas.accesorio_id, "
                             "Herbalife.Room_actividadesrealizadas.actividades_id, "
@@ -116,15 +118,16 @@ class ReportesData(APIView):
     def post(self, request):
         reporte=Reportes()
         print("request")
-        print(request)
+        print(request.data)
         print("end request")
-
         try:
             reporte.creado_por= request.data["creado_por"]
             reporte.observaciones=request.data["observaciones"]
             reporte.inicio=request.data["inicio"]
             reporte.fin=request.data["fin"]
             reporte.cuarto_id=request.data["cuarto_id"]
+            print(request.data["isReport"])
+            reporte.isReport = request.data["isReport"]
             reporte.save()
             ##################
 
@@ -132,14 +135,16 @@ class ReportesData(APIView):
                 print("\n")
                 #print(r)
                 actR = ActividadesRealizadas()
+                print("ACTREAL_ID: "+str(actR.id)+"\n")
                 actR.reporte_id = reporte.id
                 actR.observaciones=r["observaciones"]
-                print("\actREa\n")
+                print("\n"+r["realizado"])
                 actR.realizado= r["realizado"]
                 actR.accesorio_id=r["accesorio_id"]
                 actR.actividades_id=r["actividades_id"]
                 print("\n")
                 actR.save()
+                print("ACTREAL_ID: " + str(actR.id) + "\n")
             ###################
                 actAlrt = ActividadAlerta()
                 actAlrt.actividadRealizada_id=actR.id
@@ -148,7 +153,6 @@ class ReportesData(APIView):
                 actAlrt.observaciones=request.data["ActAlerta_observaciones"]##
             ##
                 actAlrt.save()
-
             print(request.data)
             return Response({"ok":"Reporte creado"}, status=status.HTTP_201_CREATED)
         except Exception as e:

@@ -85,7 +85,7 @@ class Reportes(models.Model):
     observaciones = models.TextField("observaciones", blank=True,null=True)
     inicio = models.DateTimeField("inicio")
     fin = models.DateTimeField()
-
+    isReport=models.IntegerField(default=5)
     # Fk
     cuarto = models.ForeignKey(
         Cuartos,
@@ -97,7 +97,7 @@ class Reportes(models.Model):
 class ActividadesRealizadas(models.Model):
     id = models.AutoField(primary_key=True)
     observaciones = models.TextField("observaciones", blank=True,null=True )
-    realizado = models.DateTimeField("realizado", auto_now=True)
+    realizado = models.DateTimeField("realizado", auto_now=False)
 
     # FK
     reporte = models.ForeignKey(
