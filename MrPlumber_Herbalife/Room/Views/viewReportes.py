@@ -220,12 +220,52 @@ class ReporteEditDesc(APIView):
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 
+class ReporteUltimoQuery(APIView):
+    def get(self, request):
+        return Response(ultimoDato(), status=status.HTTP_200_OK)
+
+
 def update(ActRealizada_id, ActRealizada_observaciones, ActAlert_id, foco_id):
     with connection.cursor() as cursor:
         cursor.execute("Update Herbalife.Room_actividadesrealizadas set observaciones=%s where id=%s;", [ActRealizada_observaciones, ActRealizada_id])
         cursor.execute("Update Herbalife.Room_actividadalerta set foco_id=%s where id=%s;", [foco_id, ActAlert_id])
         print("update")
         row = cursor.fetchone()
+    return row
+
+def ultimoDato():
+    with connection.cursor() as cursor:
+        cursor.execute(
+                        "SELECT "
+                        "Room_accesorios.nombre, "
+                        "Room_accesorios.codigo_id, "
+                        "Room_cuartos.nombre AS \'cuarto\', "
+                        "Room_pisos.nombre AS \'piso\', "
+                        "Room_actividadesrealizadas.observaciones, "
+                        "Room_actividadesrealizadas.realizado, "
+                        "Room_focosdeactividad.colores, "
+                        "Room_focosdeactividad.descripcion "
+                        "FROM "
+                        "Room_actividadesrealizadas "
+                        "INNER JOIN "
+                        "Room_accesorios ON Room_accesorios.id = Room_actividadesrealizadas.accesorio_id "
+                        "INNER JOIN "
+                        "Room_actividadalerta ON Room_actividadalerta.actividadRealizada_id = Room_actividadesrealizadas.id "
+                        "INNER JOIN "
+                        "Room_focosdeactividad ON Room_focosdeactividad.id = Room_actividadalerta.foco_id "
+                        "INNER JOIN "
+                        "Room_cuartos ON Room_cuartos.id = Room_accesorios.cuarto_id "
+                        "INNER JOIN "
+                        "Room_pisos ON Room_pisos.id = Room_cuartos.piso_id "
+                        "WHERE "
+                        "Room_actividadesrealizadas.id IN (SELECT " 
+                        "MAX(id) AS \'id\' " 
+                        "FROM "
+                        "Room_actividadesrealizadas "
+                        "GROUP BY Room_actividadesrealizadas.accesorio_id) "
+                        "ORDER BY piso DESC "
+                            )
+        row = dictfetchall(cursor)
     return row
 '''
 {
